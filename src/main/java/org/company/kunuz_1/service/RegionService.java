@@ -87,7 +87,7 @@ public class RegionService {
         for (RegionEntity entity : iterable) {
             RegionDTO dto = new RegionDTO();
             dto.setId(entity.getId());
-            dto.setOrderNumber(entity.getOrderNumber());
+            dto.setKey(lang);
             if (lang == LanguageEnum.UZ) {
                 dto.setCurrentName(entity.getNameUz());
             }
@@ -97,8 +97,6 @@ public class RegionService {
             if (lang == LanguageEnum.EN) {
                 dto.setCurrentName(entity.getNameEn());
             }
-            dto.setVisible(entity.getVisible());
-            dto.setCreatedDate(entity.getCreatedDate());
             dtoList.add(dto);
         }
         return dtoList;

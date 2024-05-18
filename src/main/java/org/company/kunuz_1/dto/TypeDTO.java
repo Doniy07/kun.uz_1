@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class RegionDTO {
+public class TypeDTO {
     private Integer id;
     private Integer orderNumber;
     private LanguageEnum key;

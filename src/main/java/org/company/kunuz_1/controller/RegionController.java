@@ -17,20 +17,20 @@ public class RegionController {
     private RegionService regionService;
 
     @PostMapping("/create")
-    public ResponseEntity<RegionDTO> create(@RequestBody RegionDTO regionDTO) {
+    public ResponseEntity<RegionDTO> addRegion(@RequestBody RegionDTO regionDTO) {
         RegionDTO response = regionService.create(regionDTO);
         return ResponseEntity.ok().body(response);
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Boolean> update(@PathVariable("id") Integer id,
+    public ResponseEntity<Boolean> updateRegion(@PathVariable("id") Integer id,
                                           @RequestBody RegionDTO dto) {
         Boolean result = regionService.update(id, dto);
         return ResponseEntity.ok().body(result);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Boolean> delete(@PathVariable("id") Integer id) {
+    public ResponseEntity<Boolean> deleteRegion(@PathVariable("id") Integer id) {
         Boolean result = regionService.delete(id);
         return ResponseEntity.ok().body(result);
     }

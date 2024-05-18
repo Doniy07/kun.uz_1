@@ -43,7 +43,9 @@ public class CategoryService {
 
 
     public Boolean delete(Integer id) {
-//        studentRepository.deleteById(id);
+        /*
+        studentRepository.deleteById(id);
+         */
         CategoryEntity entity = get(id);
         categoryRepository.delete(entity);
         return true;
@@ -55,7 +57,6 @@ public class CategoryService {
             throw new IllegalArgumentException("Student not found");
         }
         return optional.get();*/
-
         return categoryRepository.findById(id).orElseThrow(() -> {
             throw new IllegalArgumentException("Region not found");
         });
@@ -85,7 +86,7 @@ public class CategoryService {
         for (CategoryEntity entity : iterable) {
             CategoryDTO dto = new CategoryDTO();
             dto.setId(entity.getId());
-            dto.setOrderNumber(entity.getOrderNumber());
+            dto.setLang(lang);
             if (lang == LanguageEnum.UZ) {
                 dto.setCurrentName(entity.getNameUz());
             }
@@ -95,8 +96,6 @@ public class CategoryService {
             if (lang == LanguageEnum.EN) {
                 dto.setCurrentName(entity.getNameEn());
             }
-            dto.setVisible(entity.getVisible());
-            dto.setCreatedDate(entity.getCreatedDate());
             dtoList.add(dto);
         }
         return dtoList;

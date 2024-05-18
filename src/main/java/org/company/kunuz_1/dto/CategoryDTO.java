@@ -1,15 +1,19 @@
 package org.company.kunuz_1.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
+import org.company.kunuz_1.enums.LanguageEnum;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CategoryDTO {
     private Integer id;
     private Integer orderNumber;
+    private LanguageEnum lang;
     private String nameUz;
     private String nameRu;
     private String nameEn;

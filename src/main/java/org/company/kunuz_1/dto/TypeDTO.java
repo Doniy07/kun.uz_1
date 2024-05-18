@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 public class TypeDTO {
     private Integer id;
     private Integer orderNumber;
-    private LanguageEnum key;
     private String nameUz;
     private String nameRu;
     private String nameEn;

@@ -87,7 +87,6 @@ public class RegionService {
         for (RegionEntity entity : iterable) {
             RegionDTO dto = new RegionDTO();
             dto.setId(entity.getId());
-            dto.setKey(lang);
             if (lang == LanguageEnum.UZ) {
                 dto.setCurrentName(entity.getNameUz());
             }

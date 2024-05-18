@@ -72,7 +72,6 @@ public class TypeService {
         for (TypeEntity entity : iterable) {
             TypeDTO dto = new TypeDTO();
             dto.setId(entity.getId());
-            dto.setKey(lang);
             if (lang == LanguageEnum.UZ) {
                 dto.setCurrentName(entity.getNameUz());
             }

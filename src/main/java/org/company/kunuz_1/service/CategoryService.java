@@ -86,7 +86,6 @@ public class CategoryService {
         for (CategoryEntity entity : iterable) {
             CategoryDTO dto = new CategoryDTO();
             dto.setId(entity.getId());
-            dto.setLang(lang);
             if (lang == LanguageEnum.UZ) {
                 dto.setCurrentName(entity.getNameUz());
             }

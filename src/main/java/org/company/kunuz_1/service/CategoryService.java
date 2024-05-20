@@ -1,8 +1,13 @@
 package org.company.kunuz_1.service;
 
+import org.company.kunuz_1.dto.CategoryCreateDTO;
 import org.company.kunuz_1.dto.CategoryDTO;
+import org.company.kunuz_1.dto.RegionDTO;
 import org.company.kunuz_1.entity.CategoryEntity;
+import org.company.kunuz_1.entity.RegionEntity;
 import org.company.kunuz_1.enums.LanguageEnum;
+import org.company.kunuz_1.exception.AppBadException;
+import org.company.kunuz_1.mapper.CategoryMapper;
 import org.company.kunuz_1.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +20,7 @@ public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    public CategoryDTO create(CategoryDTO dto) {
+    public CategoryDTO create(CategoryCreateDTO dto) {
         CategoryEntity entity = new CategoryEntity();
         entity.setOrderNumber(dto.getOrderNumber());
         entity.setNameUz(dto.getNameUz());
@@ -24,14 +29,21 @@ public class CategoryService {
 
         categoryRepository.save(entity);
 
-        dto.setId(entity.getId());
-        dto.setVisible(entity.getVisible());
-        dto.setCreatedDate(entity.getCreatedDate());
+        return toDTO(entity);
+    }
 
+    private CategoryDTO toDTO(CategoryEntity entity) {
+        CategoryDTO dto = new CategoryDTO();
+        dto.setId(entity.getId());
+        dto.setOrderNumber(entity.getOrderNumber());
+        dto.setNameUz(entity.getNameUz());
+        dto.setNameRu(entity.getNameRu());
+        dto.setNameEn(entity.getNameEn());
+        dto.setCreatedDate(entity.getCreatedDate());
         return dto;
     }
 
-    public Boolean update(Integer id, CategoryDTO dto) {
+    public Boolean update(Integer id, CategoryCreateDTO dto) {
         CategoryEntity entity = get(id);
         entity.setOrderNumber(dto.getOrderNumber());
         entity.setNameUz(dto.getNameUz());
@@ -43,57 +55,48 @@ public class CategoryService {
 
 
     public Boolean delete(Integer id) {
-        /*
-        studentRepository.deleteById(id);
-         */
-        CategoryEntity entity = get(id);
-        categoryRepository.delete(entity);
+        categoryRepository.deleteById(id);
         return true;
     }
 
     public CategoryEntity get(Integer id) {
-        /*Optional<StudentEntity> optional = studentRepository.findById(id);
-        if (optional.isEmpty()) {
-            throw new IllegalArgumentException("Student not found");
-        }
-        return optional.get();*/
-        return categoryRepository.findById(id).orElseThrow(() -> {
-            throw new IllegalArgumentException("Region not found");
-        });
+        return categoryRepository.findById(id).orElseThrow(() -> new AppBadException("Region not found"));
     }
 
     public List<CategoryDTO> getAll() {
         Iterable<CategoryEntity> iterable = categoryRepository.findAll();
         List<CategoryDTO> dtoList = new LinkedList<>();
         for (CategoryEntity entity : iterable) {
-            CategoryDTO dto = new CategoryDTO();
-            dto.setId(entity.getId());
-            dto.setOrderNumber(entity.getOrderNumber());
-            dto.setNameUz(entity.getNameUz());
-            dto.setNameRu(entity.getNameRu());
-            dto.setNameEn(entity.getNameEn());
-            dto.setVisible(entity.getVisible());
-            dto.setCreatedDate(entity.getCreatedDate());
-            dtoList.add(dto);
+            dtoList.add(toDTO(entity));
         }
         return dtoList;
     }
 
 
     public List<CategoryDTO> getAllByLang(LanguageEnum lang) {
-        Iterable<CategoryEntity> iterable = categoryRepository.findAll();
+        Iterable<CategoryMapper> iterable = categoryRepository.findAll(lang.name());
+        List<CategoryDTO> dtoList = new LinkedList<>();
+        for (CategoryMapper entity : iterable) {
+            CategoryDTO dto = new CategoryDTO();
+            dto.setId(entity.getId());
+            dto.setOrderNumber(entity.getOrderNumber());
+            dto.setName(entity.getName());
+            dtoList.add(dto);
+        }
+        return dtoList;
+    }
+
+    public List<CategoryDTO> getAllByLang2(LanguageEnum lang) {
+        Iterable<CategoryEntity> iterable = categoryRepository.findAllByVisibleTrueOrderByOrderNumberDesc();
         List<CategoryDTO> dtoList = new LinkedList<>();
         for (CategoryEntity entity : iterable) {
             CategoryDTO dto = new CategoryDTO();
             dto.setId(entity.getId());
-            if (lang == LanguageEnum.UZ) {
-                dto.setCurrentName(entity.getNameUz());
-            }
-            if (lang == LanguageEnum.RU) {
-                dto.setCurrentName(entity.getNameRu());
-            }
-            if (lang == LanguageEnum.EN) {
-                dto.setCurrentName(entity.getNameEn());
+            dto.setOrderNumber(entity.getOrderNumber());
+            switch (lang) {
+                case EN ->  dto.setName(entity.getNameEn());
+                case RU ->  dto.setName(entity.getNameRu());
+                case UZ ->  dto.setName(entity.getNameUz());
             }
             dtoList.add(dto);
         }

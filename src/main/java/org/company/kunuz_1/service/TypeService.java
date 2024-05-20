@@ -1,9 +1,12 @@
 package org.company.kunuz_1.service;
 
 
+import org.company.kunuz_1.dto.TypeCreateDTO;
 import org.company.kunuz_1.dto.TypeDTO;
 import org.company.kunuz_1.entity.TypeEntity;
 import org.company.kunuz_1.enums.LanguageEnum;
+import org.company.kunuz_1.exception.AppBadException;
+import org.company.kunuz_1.mapper.TypeMapper;
 import org.company.kunuz_1.repository.TypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,7 +24,7 @@ public class TypeService {
     @Autowired
     private TypeRepository typeRepository;
 
-    public TypeDTO create(TypeDTO dto) {
+    public TypeDTO create(TypeCreateDTO dto) {
         TypeEntity entity = new TypeEntity();
         entity.setOrderNumber(dto.getOrderNumber());
         entity.setNameUz(dto.getNameUz());
@@ -29,13 +32,22 @@ public class TypeService {
         entity.setNameEn(dto.getNameEn());
         typeRepository.save(entity);
 
+
+        return toDTO(entity);
+    }
+
+    private TypeDTO toDTO(TypeEntity entity) {
+        TypeDTO dto = new TypeDTO();
         dto.setId(entity.getId());
-        dto.setVisible(entity.getVisible());
+        dto.setOrderNumber(entity.getOrderNumber());
+        dto.setNameUz(entity.getNameUz());
+        dto.setNameRu(entity.getNameRu());
+        dto.setNameEn(entity.getNameEn());
         dto.setCreatedDate(entity.getCreatedDate());
         return dto;
     }
 
-    public Boolean update(Integer id, TypeDTO dto) {
+    public Boolean update(Integer id, TypeCreateDTO dto) {
         TypeEntity entity = get(id);
         entity.setOrderNumber(dto.getOrderNumber());
         entity.setNameUz(dto.getNameUz());
@@ -47,40 +59,41 @@ public class TypeService {
 
 
     public Boolean delete(Integer id) {
-        /*
-        studentRepository.deleteById(id);
-        */
-        TypeEntity entity = get(id);
-        typeRepository.delete(entity);
+        typeRepository.deleteById(id);
+        /*TypeEntity entity = get(id);
+        typeRepository.delete(entity);*/
         return true;
     }
 
     public TypeEntity get(Integer id) {
-        /*Optional<StudentEntity> optional = studentRepository.findById(id);
-        if (optional.isEmpty()) {
-            throw new IllegalArgumentException("Student not found");
-        }
-        return optional.get();*/
         return typeRepository.findById(id).orElseThrow(() -> {
-            throw new IllegalArgumentException("Region not found");
+            throw new AppBadException("Type not found");
         });
     }
 
-    public List<TypeDTO> getAllByLang(LanguageEnum lang) {
-        Iterable<TypeEntity> iterable = typeRepository.findAll();
+    public List<TypeDTO> getAllByLang2(LanguageEnum lang) {
+        Iterable<TypeEntity> iterable = typeRepository.findAllByVisibleTrueOrderByOrderNumberDesc();
         List<TypeDTO> dtoList = new LinkedList<>();
         for (TypeEntity entity : iterable) {
             TypeDTO dto = new TypeDTO();
             dto.setId(entity.getId());
-            if (lang == LanguageEnum.UZ) {
-                dto.setCurrentName(entity.getNameUz());
+            switch (lang) {
+                case EN ->  dto.setName(entity.getNameEn());
+                case RU ->  dto.setName(entity.getNameRu());
+                case UZ ->  dto.setName(entity.getNameUz());
             }
-            if (lang == LanguageEnum.RU) {
-                dto.setCurrentName(entity.getNameRu());
-            }
-            if (lang == LanguageEnum.EN) {
-                dto.setCurrentName(entity.getNameEn());
-            }
+            dtoList.add(dto);
+        }
+        return dtoList;
+    }
+
+    public List<TypeDTO> getAllByLang(LanguageEnum lang) {
+        Iterable<TypeMapper> iterable = typeRepository.findAll(lang.name());
+        List<TypeDTO> dtoList = new LinkedList<>();
+        for (TypeMapper entity : iterable) {
+            TypeDTO dto = new TypeDTO();
+            dto.setId(entity.getId());
+            dto.setName(entity.getName());
             dtoList.add(dto);
         }
         return dtoList;

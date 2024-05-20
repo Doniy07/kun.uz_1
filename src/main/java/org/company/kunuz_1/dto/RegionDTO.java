@@ -3,7 +3,6 @@ package org.company.kunuz_1.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
-import org.company.kunuz_1.enums.LanguageEnum;
 
 import java.time.LocalDateTime;
 
@@ -16,7 +15,7 @@ public class RegionDTO {
     private String nameUz;
     private String nameRu;
     private String nameEn;
-    private String currentName;
+    private String name;
     private Boolean visible;
     private LocalDateTime createdDate;
 }

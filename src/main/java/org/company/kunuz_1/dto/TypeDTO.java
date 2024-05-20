@@ -16,7 +16,7 @@ public class TypeDTO {
     private String nameUz;
     private String nameRu;
     private String nameEn;
-    private String currentName;
+    private String name;
     private Boolean visible;
     private LocalDateTime createdDate;
 }

@@ -1,5 +1,7 @@
 package org.company.kunuz_1.controller;
 
+import jakarta.validation.Valid;
+import org.company.kunuz_1.dto.CategoryCreateDTO;
 import org.company.kunuz_1.dto.CategoryDTO;
 import org.company.kunuz_1.enums.LanguageEnum;
 import org.company.kunuz_1.service.CategoryService;
@@ -17,33 +19,29 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @PostMapping("/create")
-    public ResponseEntity<CategoryDTO> create(@RequestBody CategoryDTO categoryDTO) {
-        CategoryDTO response = categoryService.create(categoryDTO);
-        return ResponseEntity.ok().body(response);
+    public ResponseEntity<CategoryDTO> addCategory(@Valid @RequestBody CategoryCreateDTO categoryDTO) {
+        return ResponseEntity.ok().body(categoryService.create(categoryDTO));
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Boolean> update(@PathVariable("id") Integer id,
-                                          @RequestBody CategoryDTO dto) {
-        Boolean result = categoryService.update(id, dto);
-        return ResponseEntity.ok().body(result);
+    public ResponseEntity<Boolean> updateCategory(@PathVariable("id") Integer id,
+                                          @Valid @RequestBody CategoryCreateDTO dto) {
+        return ResponseEntity.ok().body(categoryService.update(id, dto));
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Boolean> delete(@PathVariable("id") Integer id) {
-        Boolean result = categoryService.delete(id);
-        return ResponseEntity.ok().body(result);
+    public ResponseEntity<Boolean> deleteCategory(@PathVariable("id") Integer id) {
+        return ResponseEntity.ok().body(categoryService.delete(id));
     }
 
     @GetMapping("/all")
     public ResponseEntity<List<CategoryDTO>> all() {
-        List<CategoryDTO> regionDTOList = categoryService.getAll();
-        return ResponseEntity.ok().body(regionDTOList);
+        return ResponseEntity.ok().body(categoryService.getAll());
     }
 
-    @GetMapping("/getAllByLang")
-    public ResponseEntity<List<CategoryDTO>> getAllByLang(@RequestParam("lang") LanguageEnum lang) {
-        List<CategoryDTO> regionDTOList = categoryService.getAllByLang(lang);
-        return ResponseEntity.ok().body(regionDTOList);
+    @GetMapping("/lang")
+    public ResponseEntity<List<CategoryDTO>> getAllByLang(
+            @RequestHeader(value = "Accept-Language", defaultValue = "UZ") LanguageEnum lang) {
+        return ResponseEntity.ok().body(categoryService.getAllByLang(lang));
     }
 }

@@ -1,0 +1,19 @@
+###
+POST http://localhost:8080/profile/create
+Content-Type: application/json
+
+{
+  "name": "Kaka",
+  "surname": "Kakaev",
+  "email": "sezir@gmail.com",
+  "phone": "5678",
+  "password": "kaka",
+  "status": "ACTIVE",
+  "role": "ROLE_USER"
+}
+
+###
+GET http://localhost:8080/profile/all
+
+###
+DELETE http://localhost:8080/profile/delete/7

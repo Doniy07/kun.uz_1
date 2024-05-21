@@ -25,32 +25,34 @@ public class ProfileCustomRepository {
 
         StringBuilder query = new StringBuilder();
         if (filter.getName() != null) {
-            query.append(" and c.name=:name ");
+            query.append(" and p.name=:name ");
             params.put("name", filter.getName());
         }
         if (filter.getSurname() != null) {
-            query.append(" and c.surname=:surname ");
+            query.append(" and p.surname=:surname ");
             params.put("surname", filter.getSurname());
         }
         if (filter.getPhone() != null) {
-            query.append(" and c.phone=:phone ");
+            query.append(" and p.phone=:phone ");
             params.put("phone", filter.getPhone());
         }
         if (filter.getRole() != null) {
-            query.append(" and c.role=:role ");
+            query.append(" and p.role=:role ");
             params.put("role", filter.getRole());
         }
         if (filter.getCreatedDateTo() != null) {
-            query.append(" and c.created_date >=: createdDateTo ");
+            query.append(" and p.created_date >=: createdDateTo ");
             params.put("createdDateTo", filter.getCreatedDateTo());
         }
         if (filter.getCreatedDateFrom() != null) {
-            query.append(" and c.created_date <=: createdDateFrom ");
+            query.append(" and p.created_date <=: createdDateFrom ");
             params.put("createdDateFrom", filter.getCreatedDateFrom());
         }
 
         StringBuilder selectSql = new StringBuilder("From ProfileEntity p where p.visible=true ");
+        selectSql.append(query);
         StringBuilder counttSdl = new StringBuilder("select count (p) From ProfileEntity p where p.visible=true ");
+        counttSdl.append(query);
 
         Query selectQuery = em.createQuery(selectSql.toString());
         Query countQuery = em.createQuery(counttSdl.toString());

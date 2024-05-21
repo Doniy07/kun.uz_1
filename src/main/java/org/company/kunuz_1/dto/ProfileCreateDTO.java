@@ -2,6 +2,7 @@ package org.company.kunuz_1.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -16,6 +17,7 @@ public class ProfileCreateDTO {
     private String name;
     @NotBlank(message = "Surname required")
     private String surname;
+    @Email
     @NotBlank(message = "Email required")
     private String email;
     @NotBlank(message = "Phone required")

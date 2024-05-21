@@ -17,3 +17,11 @@ GET http://localhost:8080/profile/all
 
 ###
 DELETE http://localhost:8080/profile/delete/7
+
+###
+POST http://localhost:8080/profile/filter?page=1&size=5
+Content-Type: application/json
+
+{
+  "name": "Sezir"
+}
